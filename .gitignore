@@ -1,0 +1,18 @@
+# Python 
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Onnx models
+*.onnx
+
+# Env variables
+.env
+aws_credentials
+*.pem
+
+# MLFlow db
+*.db

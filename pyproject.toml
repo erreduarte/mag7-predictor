@@ -1,0 +1,15 @@
+[project]
+name = "mag-7-api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "boto3>=1.42.49",
+    "fastapi>=0.128.8",
+    "numpy>=2.4.2",
+    "onnxruntime>=1.24.1",
+    "pandas>=2.3.3",
+    "uvicorn>=0.40.0",
+    "yfinance>=1.1.0",
+]

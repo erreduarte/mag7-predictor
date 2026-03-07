@@ -16,3 +16,20 @@ aws_credentials
 
 # MLFlow db
 *.db
+
+#GIT
+.git 
+.github
+*.log
+
+*.csv
+*.parquet
+artifacts/
+mlruns/
+
+#package cache
+.uv/
+.cache/
+
+#Notebooks
+*.ipynb

@@ -1,12 +1,15 @@
-import pandas as pd
-import logging
-import yfinance as yf
-import numpy as np
-from datetime import datetime, timedelta
+
 
 
 def get_app_features(ticker:str):
-    "This function builds the features directly from the API results (YahooFinance)"
+    "This helper builds the features directly from the API results (YahooFinance)"
+    
+    #lazy import 
+    import pandas as pd
+    import yfinance as yf
+    import numpy as np
+    import logging
+    from datetime import datetime, timedelta
 
     logging.info("Downloading stock market data for %s", ticker)
 
@@ -25,7 +28,7 @@ def get_app_features(ticker:str):
 
     df = yf_data.drop_duplicates()
 
-    # Always work with values from the day before: when we have market closed values
+    # Always work with values from the day before: when we have market closed values // avoids data leakage // app integrity
     yesterday = datetime.now().date() - timedelta(days=1)
     df = df[df['date'].dt.date <= yesterday]
 

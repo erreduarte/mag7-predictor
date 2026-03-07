@@ -3,12 +3,15 @@ name = "mag-7-api"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 dependencies = [
-    "boto3>=1.42.49",
+    "dagshub>=0.6.8",
     "fastapi>=0.128.8",
+    "mlflow-skinny>=3.10.1",
     "numpy>=2.4.2",
     "onnxruntime>=1.24.1",
+    "opentelemetry-api>=1.24.0",
+    "opentelemetry-sdk>=1.24.0",
     "pandas>=2.3.3",
     "uvicorn>=0.40.0",
     "yfinance>=1.1.0",

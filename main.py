@@ -1,46 +1,67 @@
 """This script loads an MLFLow model from the artifactory and fetches data from the YahooFinance library to classificate
 Magnificent 7 stocks: if the price will go up (1) or down (0)"""
 
-import boto3
+import logging
+import os
 from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
-import onnxruntime as ort
+
+import dagshub
+import mlflow
 import numpy as np
-import logging
-from fastapi import FastAPI
-from helpers import get_app_features
+import onnxruntime as ort
 import uvicorn
+from dotenv import load_dotenv
+from fastapi import FastAPI
+
+from helpers import get_app_features
 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
+logging.info("Importing env creds")
 
-BUCKET_NAME = "mlflow-artifacts-renan"
+load_dotenv()
 
-MODEL_PATH = "production/model.onnx"
-ONNX_FILE = "model.onnx"
+#load DAGSHUB credentials from vault
+os.environ["MLFLOW_TRACKING_USERNAME"] = os.environ.get("DAGSHUB_USERNAME")
+os.environ["MLFLOW_TRACKING_PASSWORD"] = os.environ.get("DAGSHUB_TOKEN")
+
+
+logging.info("Accessing DAGSHUB Repository")
+
+repo_url = "https://dagshub.com/erreduarte/mag7-predictor"
+mlflow.set_tracking_uri(f"{repo_url}.mlflow")
+
+logging.info("Initizaling MLFlow Client")
+client = mlflow.MlflowClient()
+
+MODEL_NAME = "mag_seven_onnxmodel"
+MODEL_URI = f"models:/{MODEL_NAME}@production"
+
 
 models = {}
 
 
 #before initializing the predict application
 
-@asynccontextmanager # --> load model before the app starts
+@asynccontextmanager # loads model before the app starts
 async def lifespan(app: FastAPI):
 
-    # logging.info("Connecting to MLFLow...") # --> fetches the model directly from MLFLow artifactory
+    # fetches the model directly from DAGSHUB MLFLow artifactory
     try:
 
-        logging.info("Initializing AWS client")
-        s3 = boto3.client('s3')
-              
+        #Get the model path so ONNX open it 
+        logging.info("Downloading model")
+        model_path = mlflow.artifacts.download_artifacts(artifact_uri=MODEL_URI)
 
-        logging.info("Downloading %s from %s", ONNX_FILE, f"s3://{MODEL_PATH}")
-        s3_model = s3.download_file(BUCKET_NAME, MODEL_PATH, ONNX_FILE)
+        file_path = os.path.join(model_path, "model.onnx")
 
         logging.info("Loading downloaded model to the session")
-        models["session"] = ort.InferenceSession(ONNX_FILE)
+        # models["session"] = ort.InferenceSession(onnx_model.SerializeToString())
+
+        models['session'] = ort.InferenceSession(file_path)
 
         logging.info("Model session built")
 

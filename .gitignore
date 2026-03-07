@@ -19,7 +19,6 @@ aws_credentials
 
 #GIT
 .git 
-.github
 *.log
 
 *.csv

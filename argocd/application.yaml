@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mag7-predictor
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/erreduarte/mag7-predictor.git
+    targetRevision: develop
+    path: mag7-chart # folder path to the helm chart
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true #delete resources if deleted in Git
+      selfHeal: true #if something manually changes in the cluster, it returns to git state

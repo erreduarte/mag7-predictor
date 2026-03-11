@@ -18,7 +18,7 @@ imagePullSecrets:
   - name: ghcr-auth
 # This is to override the chart name.
 nameOverride: ""
-fullnameOverride: ""
+fullnameOverride: "mag7-api"
 
 env:
   - name: DAGSHUB_USERNAME

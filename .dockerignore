@@ -50,3 +50,6 @@ build
 # Documentation
 README.md
 docs
+
+#Local
+start_mlops.sh

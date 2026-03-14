@@ -32,3 +32,6 @@ mlruns/
 
 #Notebooks
 *.ipynb
+
+#Local
+start_mlops.sh
